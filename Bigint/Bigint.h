@@ -28,6 +28,14 @@ namespace BigInt {
 		Bigint(const Bigint &);
 		Bigint(const Bigint &&);
 
+		//Literal operator
+		friend Bigint operator "" _Bigint(const char *);
+		friend Bigint operator "" _Bigint(const unsigned long long);
+		friend Bigint operator "" _Bigint(const long double);
+
+		//Negative
+		Bigint &operator-();
+
 		//Adding
 		Bigint operator+(Bigint const &) const;
 		Bigint &operator+=(Bigint const &);
@@ -60,6 +68,13 @@ namespace BigInt {
 		Bigint operator%(Bigint const &) const;
 		Bigint &operator%=(Bigint const &);
 
+		//Left Shift
+		Bigint operator<<(int const &) const;
+		Bigint & operator<<=(int const &);
+
+		//Right Shift
+		Bigint operator>>(int const &) const;
+		Bigint & operator>>=(int const &);
 
 		//Compare
 		bool operator<(const Bigint &) const;
@@ -73,9 +88,6 @@ namespace BigInt {
 		Bigint operator=(const long long &);
 		Bigint operator=(const Bigint &);
 		Bigint operator=(const Bigint &&);
-		friend Bigint operator "" _Bigint(const char *);
-		friend Bigint operator "" _Bigint(const unsigned long long);
-		friend Bigint operator "" _Bigint(const long double);
 
 		//Access
 		int operator[](int const &);
@@ -92,7 +104,14 @@ namespace BigInt {
 		Bigint &abs();
 
 		//Power
-		Bigint &pow(int const &);
+		Bigint &pow(int);
+		Bigint &pow(long long);
+		friend Bigint pow(Bigint, int);
+		friend Bigint pow(Bigint, long long);
+
+		//Factorial
+		Bigint &fact();
+		friend Bigint fact(Bigint);
 
 		//Trivia
 		int digits() const;
@@ -104,16 +123,24 @@ namespace BigInt {
 		long long toLL() const;
 	private:
 		int segment_length(int) const;
-		Bigint pow(int const &, std::map<int, Bigint> &);
+		// Bigint pow(int const &, std::map<int, Bigint> &);
 		int compare(Bigint const &) const; //0 a == b, -1 a < b, 1 a > b
 	};
 
+	Bigint operator "" _Bigint(const char *);
+	Bigint operator "" _Bigint(const unsigned long long);
+	Bigint operator "" _Bigint(const long double);
+	std::istream &operator>>(std::istream &, Bigint &);
+	std::ostream &operator<<(std::ostream &, Bigint const &);
+	Bigint pow(Bigint, int);
+	Bigint pow(Bigint, long long);
+	Bigint fact(Bigint);
 	Bigint abs(Bigint);
 	std::string to_string(Bigint const &);
 	Bigint factorial(int);
-	Bigint operator+(long long const & b, Bigint c);
-	Bigint operator-(long long const & b, Bigint c);
-	Bigint operator*(long long const & b, Bigint c);
+	Bigint operator+(long long const &, Bigint);
+	Bigint operator-(long long const &, Bigint);
+	Bigint operator*(long long const &, Bigint);
 	
 
 }

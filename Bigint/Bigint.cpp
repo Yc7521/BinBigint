@@ -42,12 +42,41 @@ namespace BigInt {
 		skip(b.skip) {
 	}
 	Bigint::Bigint(long double value) : Bigint((double)value) {}
+	Bigint::Bigint(float value) {
+		auto t__ = (unsigned long long *)(&value);
+		std::bitset<32> n(*t__);
+		base = Bigint::default_base;
+		skip = 0;
+		//std::cout << n << std::endl;
+		positive = !(n[31]);
+
+		int e = (int)(rget(n, 1, 8) - 127);
+		if (e == 0) {
+			number.push_back(1);
+		}
+		else if (e > 0) {
+			int a = (((23) < (e)) ? (23) : (e));
+			long long m = (1ULL << a) | rget(n, 9, a);
+			while (m) {
+				number.push_back((int)(m % base));
+				m /= base;
+			}
+			if (e > a) {
+				*this *= Bigint(2).pow(e - a);
+			}
+		}
+
+		//while (value) {
+		//	number.push_back((int)(value % base));
+		//	value /= base;
+		//}
+	}
 	Bigint::Bigint(double value) {
 		auto t__ = (unsigned long long *)(&value);
 		std::bitset<64> n(*t__);
 		base = Bigint::default_base;
 		skip = 0;
-		std::cout << n << std::endl;
+		//std::cout << n << std::endl;
 		positive = !(n[63]);
 
 		int e = (int)(rget(n, 1, 11) - 1023);
@@ -114,6 +143,16 @@ namespace BigInt {
 		}
 	}
 
+	//Literal operator
+	Bigint operator "" _Bigint(const char * str) {
+		return Bigint(str);
+	}
+	Bigint operator "" _Bigint(const unsigned long long str) {
+		return Bigint(str);
+	}
+	Bigint operator "" _Bigint(const long double str) {
+		return Bigint(str);
+	}
 
 	Bigint::Bigint(std::string stringInteger) {
 		int size = stringInteger.length();
@@ -138,6 +177,14 @@ namespace BigInt {
 			number.push_back(num);
 			size -= length;
 		}
+	}
+
+	//Negative
+	Bigint &Bigint::operator-() {
+		if (number.size() != 0) {
+			positive = !positive;
+		}
+		return *this;
 	}
 
 	//Adding
@@ -288,7 +335,6 @@ namespace BigInt {
 
 	//Multiplication
 	Bigint Bigint::operator*(Bigint const &b) const {
-		if (b.number.size() == 1) return *this * b.number[0];
 		std::vector<int>::const_iterator it1;
 		std::vector<int>::const_iterator it2;
 		Bigint c;
@@ -357,13 +403,13 @@ namespace BigInt {
 		return *this;
 	}
 
-	Bigint Bigint::operator/(Bigint const &) const {
+	Bigint Bigint::operator/(Bigint const & b) const {
 
 		// TODO
 		return Bigint();
 	}
 
-	Bigint & Bigint::operator/=(Bigint const &) {
+	Bigint & Bigint::operator/=(Bigint const & b) {
 
 		// TODO
 		return *this;
@@ -390,16 +436,34 @@ namespace BigInt {
 		return *this;
 	}
 
-	Bigint Bigint::operator%(Bigint const &) const {
+	Bigint Bigint::operator%(Bigint const & b) const {
 
 		// TODO
 		return Bigint();
 	}
 
-	Bigint & Bigint::operator%=(Bigint const &) {
+	Bigint & Bigint::operator%=(Bigint const & b) {
 
 		// TODO
 		return *this;
+	}
+
+	//Left Shift
+	Bigint Bigint::operator<<(int const & b) const {
+		return *this / (2_Bigint).pow(b);
+	}
+
+	Bigint & Bigint::operator<<=(int const & b) {
+		return *this /= (2_Bigint).pow(b);
+	}
+
+	//Right Shift
+	Bigint Bigint::operator>>(int const & b) const {
+		return *this * (2_Bigint).pow(b);
+	}
+
+	Bigint & Bigint::operator>>=(int const & b) {
+		return *this *= (2_Bigint).pow(b);
 	}
 
 	Bigint operator*(long long const &b, Bigint c) {
@@ -423,11 +487,8 @@ namespace BigInt {
 
 		return lookup[power];
 	}
-	*/
 
-
-
-	Bigint &Bigint::pow(int const &power) {
+	Bigint &Bigint::pow(int power) {
 		std::map<int, Bigint> lookup;
 		if (power % 2 == 0 && !positive) {
 			positive = true;
@@ -435,6 +496,144 @@ namespace BigInt {
 		*this = pow(power, lookup);
 
 		return *this;
+	}
+	*/
+
+	Bigint &Bigint::pow(int power) {
+		if (power % 2 == 0 && !positive) {
+			positive = true;
+		}
+		if (power == 0) {
+			*this = 1;
+		}
+		const int bits = 8 * sizeof(int);
+		std::bitset<bits> p(power);
+		int maxbit = 0;
+		for (int i = bits - 1; i >= 0; i--) {
+			if (p[i]) {
+				maxbit = i;
+				break;
+			}
+		}
+		++maxbit;
+
+		std::vector<Bigint> lookup;
+		lookup.resize(maxbit);
+		lookup[0] = *this;
+
+		for (int i = 1; i < maxbit; i++) {
+			auto && temp = lookup[i - 1];
+			lookup[i] = temp * temp;
+		}
+
+		*this = lookup[--maxbit];
+		for (int i = maxbit - 1; i >= 0; i--) {
+			if (p[i]) *this *= lookup[i];
+		}
+
+		return *this;
+	}
+	Bigint &Bigint::pow(long long power) {
+		if (power % 2 == 0 && !positive) {
+			positive = true;
+		}
+		if (power == 0) {
+			*this = 1;
+		}
+		const int bits = 8 * sizeof(long long);
+		std::bitset<bits> p(power);
+		int maxbit = 0;
+		for (int i = bits - 1; i >= 0; i--) {
+			if (p[i]) {
+				maxbit = i;
+				break;
+			}
+		}
+		++maxbit;
+
+		std::vector<Bigint> lookup;
+		lookup.resize(maxbit);
+		lookup[0] = *this;
+
+		for (int i = 1; i < maxbit; i++) {
+			auto && temp = lookup[i - 1];
+			lookup[i] = temp * temp;
+		}
+
+		*this = lookup[--maxbit];
+		for (int i = maxbit - 1; i >= 0; i--) {
+			if (p[i]) *this *= lookup[i];
+		}
+
+		return *this;
+	}
+	Bigint pow(Bigint a, int power) {
+		if (power % 2 == 0 && !a.positive) {
+			a.positive = true;
+		}
+		if (power == 0) {
+			return 1;
+		}
+		const int bits = 8 * sizeof(int);
+		std::bitset<bits> p(power);
+		int maxbit = 0;
+		for (int i = bits - 1; i >= 0; i--) {
+			if (p[i]) {
+				maxbit = i;
+				break;
+			}
+		}
+		++maxbit;
+
+		std::vector<Bigint> lookup;
+		lookup.resize(maxbit);
+		lookup[0] = a;
+
+		for (int i = 1; i < maxbit; i++) {
+			auto && temp = lookup[i - 1];
+			lookup[i] = temp * temp;
+		}
+
+		Bigint result(lookup[--maxbit]);
+		for (int i = maxbit - 1; i >= 0; i--) {
+			if (p[i]) result *= lookup[i];
+		}
+
+		return result;
+	}
+	Bigint pow(Bigint a, long long power) {
+		if (power % 2 == 0 && !a.positive) {
+			a.positive = true;
+		}
+		if (power == 0) {
+			return 1;
+		}
+		const int bits = 8 * sizeof(long long);
+		std::bitset<bits> p(power);
+		int maxbit = 0;
+		for (int i = bits - 1; i >= 0; i--) {
+			if (p[i]) {
+				maxbit = i;
+				break;
+			}
+		}
+		++maxbit;
+
+		std::vector<Bigint> lookup;
+		lookup.resize(maxbit);
+		lookup[0] = a;
+
+		for (int i = 1; i < maxbit; i++) {
+			auto && temp = lookup[i - 1];
+			lookup[i] = temp * temp;
+		}
+
+		Bigint result(lookup[--maxbit]);
+		for (int i = maxbit - 1; i >= 0; i--) {
+			if (p[i]) result *= lookup[i];
+		}
+
+		return result;
 	}
 
 	//Compare
@@ -512,18 +711,6 @@ namespace BigInt {
 		return *this;
 	}
 
-	Bigint operator "" _Bigint(const char * str) {
-		return Bigint(str);
-	}
-
-	Bigint operator "" _Bigint(const unsigned long long str) {
-		return Bigint(str);
-	}
-
-	Bigint operator "" _Bigint(const long double str) {
-		return Bigint(str);
-	}
-
 	//Access
 	int Bigint::operator[](int const &b) {
 		if (positive)
@@ -559,6 +746,21 @@ namespace BigInt {
 
 	bool Bigint::isPositive() {
 		return positive;
+	}
+
+	//Factorial
+	Bigint & Bigint::fact() {
+		for (Bigint i = *this - 1; i > 1; --i) {
+			*this *= i;
+		}
+		return *this;
+	}
+
+	Bigint fact(Bigint b) {
+		for (Bigint i = b - 1; i > 1; --i) {
+			b *= i;
+		}
+		return b;
 	}
 
 	//Trivia
@@ -603,7 +805,7 @@ namespace BigInt {
 
 	long long Bigint::toLL() const {
 		if (number.size() > 1) {
-			return number[1] * default_base + number[0];
+			return (long long)(number[1]) * base + number[0];
 		}
 		else if (number.size() > 0) {
 			return number[0];
