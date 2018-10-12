@@ -60,6 +60,13 @@ namespace BigInt {
 		Bigint operator%(Bigint const &) const;
 		Bigint &operator%=(Bigint const &);
 
+		//Left Shift
+		Bigint operator<<(unsigned int const &) const;
+		Bigint & operator<<=(unsigned int const &);
+
+		//Right Shift
+		Bigint operator>>(unsigned int const &) const;
+		Bigint & operator>>=(unsigned int const &);
 
 		//Compare
 		bool operator<(const Bigint &) const;
@@ -92,7 +99,14 @@ namespace BigInt {
 		Bigint &abs();
 
 		//Power
-		Bigint &pow(int const &);
+		Bigint &pow(unsigned int);
+		Bigint &pow(unsigned long long);
+		friend Bigint pow(Bigint, unsigned int);
+		friend Bigint pow(Bigint, unsigned long long);
+
+		//Factorial
+		Bigint &fact();
+		friend Bigint fact(Bigint);
 
 		//Trivia
 		int digits() const;
@@ -104,7 +118,7 @@ namespace BigInt {
 		long long toLL() const;
 	private:
 		int segment_length(int) const;
-		Bigint pow(int const &, std::map<int, Bigint> &);
+		// Bigint pow(int const &, std::map<int, Bigint> &);
 		int compare(Bigint const &) const; //0 a == b, -1 a < b, 1 a > b
 	};
 
