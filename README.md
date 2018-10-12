@@ -72,7 +72,7 @@ c -= a;
 <a id="Multiplication"></a>
 ### Multiplication
 ```
-Dodecahedron::Bigint a,b,c;
+BigInt::Bigint a,b,c;
 c = a * b;
 c *= a;
 c = a * 6;
@@ -82,7 +82,7 @@ c *= 6;
 <a id="Division"></a>
 ### Division
 ```
-Dodecahedron::Bigint a,b,c;
+BigInt::Bigint a,b,c;
 c = a / b;
 c /= a;
 c = a / 6;
@@ -92,7 +92,7 @@ c /= 6;
 <a id="Modulus"></a>
 ### Modulus
 ```
-Dodecahedron::Bigint a,b,c;
+BigInt::Bigint a,b,c;
 c = a % b;
 c %= a;
 c = a % 6;
@@ -102,7 +102,7 @@ c %= 6;
 <a id="LeftShift"></a>
 ### Left Shift
 ```
-Dodecahedron::Bigint a,b;
+BigInt::Bigint a,b;
 b = a << 3;
 b <<= 4;
 ```
@@ -110,7 +110,7 @@ b <<= 4;
 <a id="RightShift"></a>
 ### Right Shift
 ```
-Dodecahedron::Bigint a,b;
+BigInt::Bigint a,b;
 b = a >> 3;
 b >>= 4;
 ```
@@ -118,16 +118,16 @@ b >>= 4;
 <a id="Allocation"></a>
 ### Allocation
 ```
-Dodecahedron::Bigint a = 12345;
-Dodecahedron::Bigint b;
+BigInt::Bigint a = 12345;
+BigInt::Bigint b;
 b = 159753;
 ```
 
 <a id="Comparison"></a>
 ### Comparison
 ```
-Dodecahedron::Bigint a = 159753;
-Dodecahedron::Bigint b = 1634687496;
+BigInt::Bigint a = 159753;
+BigInt::Bigint b = 1634687496;
 
 if(a == b) cout << "A is the same as B";
 if(a < b) cout << "A is less than B";
@@ -139,7 +139,7 @@ if(a <= b) cout << "A is smaller than B or equal to it";
 <a id="Access"></a>
 ### Access
 ```
-Dodecahedron::Bigint a = 159753;
+BigInt::Bigint a = 159753;
 a.pow(15); //a^15, 1126510743106482...
 cout << a[3]; // 6 is the 4th digit
 ```
@@ -147,7 +147,7 @@ cout << a[3]; // 6 is the 4th digit
 <a id="Streamingoperators"></a>
 ### Streaming operators
 ```
-Dodecahedron::Bigint a,b;
+BigInt::Bigint a,b;
 cin >> a >> b;
 cout << a*b;
 ```
@@ -168,21 +168,21 @@ cout << 4.558e3_Bigint .pow(486);  // ~1.46 * 10^1778
 <a id="Constructors"></a>
 ### Constructors() +9
 ```
-Dodecahedron::Bigint a0(); //void
-Dodecahedron::Bigint a1(Dodecahedron::Bigint(1)); //Right value
-Dodecahedron::Bigint a2(a1); //Left value
-Dodecahedron::Bigint a3(1); //int
-Dodecahedron::Bigint a4(4558LL); //long long
-Dodecahedron::Bigint a5(4558e123); //double
-Dodecahedron::Bigint a6(4.558f); //float
-Dodecahedron::Bigint a7("4558"); //string
+BigInt::Bigint a0(); //void
+BigInt::Bigint a1(BigInt::Bigint(1)); //Right value
+BigInt::Bigint a2(a1); //Left value
+BigInt::Bigint a3(1); //int
+BigInt::Bigint a4(4558LL); //long long
+BigInt::Bigint a5(4558e123); //double
+BigInt::Bigint a6(4.558f); //float
+BigInt::Bigint a7("4558"); //string
 ```
 
 <a id="abs"></a>
 ### abs()
 Absolute value.
 ```
-Dodecahedron::Bigint a = -4558;
+BigInt::Bigint a = -4558;
 cout << a.abs() // 4558
 ```
 
@@ -190,16 +190,16 @@ cout << a.abs() // 4558
 ### at(int)
 return the nth digit
 ```
-Dodecahedron::Bigint a = 159753;
+BigInt::Bigint a = 159753;
 a.pow(15); //a^15, 1126510743106482...
 cout << a.at(3); // 6 is the 4th digit
 ```
 
 <a id="clear"></a>
 ### clear()
-Clears the Dodecahedron::Bigint, essentially making it equal to 0.
+Clears the BigInt::Bigint, essentially making it equal to 0.
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 cout << a.pow(486);  // ~1.46 * 10^1778
 a.clear();
 cout << a; //0
@@ -209,7 +209,7 @@ cout << a; //0
 ### digits()
 Returns the number of digits.
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 cout << a.pow(486).digits(); // 4558^486 = 1779 digit number
 ```
 
@@ -226,7 +226,7 @@ cout << a.fact(); //70`000+ digit number
 ### size()
 Return the number of digits
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 cout << a.pow(486).digits(); // 4558^486 = 1779 digit number
 ```
 
@@ -234,15 +234,15 @@ cout << a.pow(486).digits(); // 4558^486 = 1779 digit number
 ### length()
 Return the number of digits
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 cout << a.pow(486).digits(); // 4558^486 = 1779 digit number
 ```
 
 <a id="isNegative"></a>
 ### isNegative()
 ```
-Dodecahedron::Bigint a = -4558;
-Dodecahedron::Bigint b = 4558;
+BigInt::Bigint a = -4558;
+BigInt::Bigint b = 4558;
 if(a.isNegative()) cout << "A is Negative";
 if(b.isNegative()) cout << "B is Negative";
 ```
@@ -250,8 +250,8 @@ if(b.isNegative()) cout << "B is Negative";
 <a id="isPositive"></a>
 ### isPositive()
 ```
-Dodecahedron::Bigint a = -4558;
-Dodecahedron::Bigint b = 4558;
+BigInt::Bigint a = -4558;
+BigInt::Bigint b = 4558;
 if(a.isPositive()) cout << "A is Positive";
 if(b.isPositive()) cout << "B is Positive";
 ```
@@ -260,7 +260,7 @@ if(b.isPositive()) cout << "B is Positive";
 ### pow(int) +1
 Raises to the power of N.
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 cout << a.pow(486); // ~1.46 * 10^1778
 ```
 
@@ -268,7 +268,7 @@ cout << a.pow(486); // ~1.46 * 10^1778
 ### toInt()
 Returns this number if it smalll than 1000000000
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 cout << a.pow(486).toInt(); // 618886144
 
 ```
@@ -277,7 +277,7 @@ cout << a.pow(486).toInt(); // 618886144
 ### toLL()
 Returns this number if it smalll than 1000000000000000000
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 cout << a.pow(486).toInt(); // 834145742618886144
 ```
 
@@ -285,7 +285,7 @@ cout << a.pow(486).toInt(); // 834145742618886144
 ### trailing_zeros()
 Returns the number of trailing zeros.
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 a.pow(486);
 cout << a.trailing_zeros(); //972
 ```
@@ -299,7 +299,7 @@ cout << a.trailing_zeros(); //972
 ### abs(Bignum)
 Same as abs, but returns a new instance;
 ```
-Dodecahedron::Bigint a = -455897864531248;
+BigInt::Bigint a = -455897864531248;
 cout << abs(a) // 455897864531248
 ```
 
@@ -307,7 +307,7 @@ cout << abs(a) // 455897864531248
 ### pow(Bignum, int) +1
 Same as pow, but returns a new instance;
 ```
-Dodecahedron::Bigint a = 4558;
+BigInt::Bigint a = 4558;
 cout << pow(a, 486); // ~1.46 * 10^1778
 ```
 
@@ -316,7 +316,7 @@ cout << pow(a, 486); // ~1.46 * 10^1778
 Converts the big integer to a string.
 ```
 string str;
-Dodecahedron::Bigint a = 455897864531248;
+BigInt::Bigint a = 455897864531248;
 str = to_string(a);
 ```
 
@@ -324,14 +324,14 @@ str = to_string(a);
 ### fact(Bignum)
 Returns a factorial of an integer, aka n!
 ```
-cout << Dodecahedron::factorial(Bignum(20000)); //70`000+ digit number
+cout << BigInt::factorial(Bignum(20000)); //70`000+ digit number
 ```
 
 <a id="factorial"></a>
 ### factorial(int)
 Returns a factorial of an integer, aka n!
 ```
-cout << Dodecahedron::factorial(20000); //70`000+ digit number
+cout << BigInt::factorial(20000); //70`000+ digit number
 ```
 
 
