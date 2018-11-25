@@ -125,7 +125,9 @@ namespace BigInt {
 		int segment_length(int) const;
 		// Bigint pow(int const &, std::map<int, Bigint> &);
 		int compare(Bigint const &) const; //0 a == b, -1 a < b, 1 a > b
-	};
+		Bigint(bool pos, int num);
+		Bigint substr(const unsigned int _Off, const unsigned int _Count);
+};
 
 	Bigint operator "" _Bigint(const char *);
 	Bigint operator "" _Bigint(const unsigned long long);
@@ -137,6 +139,7 @@ namespace BigInt {
 	Bigint fact(Bigint);
 	Bigint abs(Bigint);
 	std::string to_string(Bigint const &);
+	std::string to_string(Bigint const &&);
 	Bigint factorial(int);
 	Bigint operator+(long long const &, Bigint);
 	Bigint operator-(long long const &, Bigint);

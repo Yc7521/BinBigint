@@ -41,6 +41,7 @@ namespace BigInt {
 		base(b.base),
 		skip(b.skip) {
 	}
+	// ver: Windows
 	Bigint::Bigint(long double value) : Bigint((double)value) {}
 	Bigint::Bigint(float value) {
 		auto t__ = (unsigned long long *)(&value);
@@ -142,7 +143,16 @@ namespace BigInt {
 			value /= base;
 		}
 	}
+	Bigint::Bigint(bool pos, int value) {
+		base = Bigint::default_base;
+		skip = 0;
+		positive = pos;
 
+		while (value) {
+			number.push_back((int)(value % base));
+			value /= base;
+		}
+	}
 	//Literal operator
 	Bigint operator "" _Bigint(const char * str) {
 		return Bigint(str);
@@ -403,15 +413,52 @@ namespace BigInt {
 		return *this;
 	}
 
-	Bigint Bigint::operator/(Bigint const & b) const {
+	int gettimes(Bigint & a, Bigint const & b) {
+		int r = 0;
+		while (a >= b) {
+			a -= b;
+			++r;
+		}
+		return r;
+	}
 
-		// TODO
-		return Bigint();
+	// ver: 1.0 到时候改掉
+	Bigint Bigint::substr(const unsigned int _Off = 0, const unsigned int _Count = -1) {
+		return to_string(*this).substr(_Off, _Count);
+	}
+
+	Bigint Bigint::operator/(Bigint const & _b) const {
+		Bigint a = *this;
+		Bigint b = _b;
+		int rp = !((b.positive ? 1 : 0) ^ (a.positive ? 1 : 0));
+		a.abs();
+		b.abs();
+		int as = a.size();
+		int bs = b.size();
+		if (bs > as) {
+			return 0;
+		}
+		else if (bs == as) {
+			return Bigint(rp, gettimes(a, b));
+		}
+		else {
+			Bigint r;
+			while (a >= b) {
+				Bigint t(a.substr(bs, as));
+				a = a.substr(0, bs);
+				r *= 10;
+				r += gettimes(a, b);
+				a *= (10_Bigint).pow(as - bs);
+				a += t;
+				as = a.size();
+			}
+			r.positive = rp;
+			return r;
+		}
 	}
 
 	Bigint & Bigint::operator/=(Bigint const & b) {
-
-		// TODO
+		*this = *this / b;
 		return *this;
 	}
 
@@ -436,16 +483,60 @@ namespace BigInt {
 		return *this;
 	}
 
-	Bigint Bigint::operator%(Bigint const & b) const {
-
-		// TODO
-		return Bigint();
+	Bigint Bigint::operator%(Bigint const & _b) const {
+		Bigint a = *this;
+		Bigint b = _b;
+		int rp = !((b.positive ? 1 : 0) ^ (a.positive ? 1 : 0));
+		a.abs();
+		b.abs();
+		int as = a.size();
+		int bs = b.size();
+		if (bs > as) {}
+		else if (bs == as) {
+			gettimes(a, b);
+		}
+		else {
+			Bigint r;
+			while (a >= b) {
+				Bigint t(a.substr(bs, as));
+				a = a.substr(0, bs);
+				r *= 10;
+				r += gettimes(a, b);
+				a *= (10_Bigint).pow(as - bs);
+				a += t;
+				as = a.size();
+			}
+		}
+		a.positive = rp;
+		return a;
 	}
 
-	Bigint & Bigint::operator%=(Bigint const & b) {
-
-		// TODO
-		return *this;
+	Bigint & Bigint::operator%=(Bigint const & _b) {
+		Bigint & a = *this;
+		Bigint b = _b;
+		int rp = !((b.positive ? 1 : 0) ^ (a.positive ? 1 : 0));
+		a.abs();
+		b.abs();
+		int as = a.size();
+		int bs = b.size();
+		if (bs > as) {}
+		else if (bs == as) {
+			gettimes(a, b);
+		}
+		else {
+			Bigint r;
+			while (a >= b) {
+				Bigint t(a.substr(bs, as));
+				a = a.substr(0, bs);
+				r *= 10;
+				r += gettimes(a, b);
+				a *= (10_Bigint).pow(as - bs);
+				a += t;
+				as = a.size();
+			}
+		}
+		a.positive = rp;
+		return a;
 	}
 
 	//Left Shift
@@ -877,6 +968,13 @@ namespace BigInt {
 		return stream.str();
 	}
 
+	std::string to_string(Bigint const &&value) {
+		std::ostringstream stream;
+		stream << value;
+
+		return stream.str();
+	}
+
 	Bigint factorial(int n) {
 		Bigint result = 1;
 		if (n % 2) {
@@ -893,4 +991,6 @@ namespace BigInt {
 	}
 
 }
+
+
 
